@@ -1,6 +1,7 @@
 package mao.com.nerdlauncher.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ public class NerdLauncherFragment extends Fragment {
     }
 
 
-    class Viewholder extends RecyclerView.ViewHolder{
+    class Viewholder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ResolveInfo mResolveInfo;
         private TextView mNameTextView;
@@ -72,6 +73,7 @@ public class NerdLauncherFragment extends Fragment {
         public Viewholder(View itemView) {
             super(itemView);
             mNameTextView= (TextView) itemView;
+            mNameTextView.setOnClickListener(this);
         }
 
         public void bindActivitys(ResolveInfo resolveInfo){
@@ -79,6 +81,15 @@ public class NerdLauncherFragment extends Fragment {
             PackageManager pm = getActivity().getPackageManager();
             String appName = mResolveInfo.loadLabel(pm).toString();
             mNameTextView.setText(appName);
+        }
+
+        @Override
+        public void onClick(View view) {
+            //显示启动应用
+            ActivityInfo activityInfo = mResolveInfo.activityInfo;
+            Intent intent=new Intent(Intent.ACTION_MAIN)
+                    .setClassName(activityInfo.packageName,activityInfo.name);
+            startActivity(intent);
         }
     }
 
